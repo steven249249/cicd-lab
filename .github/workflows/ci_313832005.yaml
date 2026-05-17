@@ -33,14 +33,12 @@ jobs:
         run: npm run format:check
 
       - name: Run tests
-        run: |
-          mkdir -p reports
-          npm test -- --reporter=default --reporter=junit --outputFile=reports/junit.xml
+        run: npm run test:ci
 
       - name: Test Reporter
         uses: dorny/test-reporter@v3
-        if: always()
+        if: ${{ !cancelled() }}
         with:
-          name: Vitest Report
-          path: reports/junit.xml
+          name: Vitest Tests
+          path: reports/*.xml
           reporter: jest-junit
