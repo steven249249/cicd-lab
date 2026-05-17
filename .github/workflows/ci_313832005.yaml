@@ -36,11 +36,12 @@ jobs:
         run: |
           mkdir -p reports
           npm run test:ci
+          ls -R reports
 
       - name: Test Reporter
         uses: dorny/test-reporter@v3
         if: always()
         with:
           name: Vitest Report
-          path: reports/*.xml
+          path: reports/junit.xml
           reporter: jest-junit
