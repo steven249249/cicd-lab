@@ -186,3 +186,19 @@ docker images
 - 如何設計 CD Pipeline 部署到目標環境
 - CI Pipeline 與 CD Pipeline 的相依關係
 - 通知或報表機制
+
+## 已實作 CI Pipeline
+
+本專案新增了 `.github/workflows/ci_313832005.yaml`，包含以下自動檢查：
+
+- TypeScript typecheck：使用 `npm run typecheck`，透過 `tsc --noEmit` 檢查型別錯誤
+- Prettier check：使用 `npm run format:check`，檢查格式是否符合專案設定
+- Test：使用 `npm test` 執行 `vitest run`，並同時輸出 JUnit 測試報告
+
+為了讓測試結果在 GitHub Actions 結果頁面中更容易查看，pipeline 會：
+
+- 將測試報告輸出為 `reports/vitest-junit.xml`
+- 使用 `actions/upload-artifact@v4` 上傳報告檔案
+- 使用 `dorny/test-reporter@v1` 將 JUnit 測試結果發佈到 GitHub Test Report 顯示區
+
+若任一檢查失敗，pipeline 會直接回傳失敗，並在 Actions 執行紀錄中顯示對應錯誤。
